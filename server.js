@@ -17,7 +17,6 @@ const API_KEY = process.env.GEMINI_API_KEY;
 
 if (!API_KEY) {
   console.error('❌ GEMINI_API_KEY is not set in environment variables');
-  // Don't exit in production, just log error
   if (process.env.NODE_ENV === 'production') {
     console.warn('⚠️  Running without Gemini API key - some features will not work');
   }
@@ -42,7 +41,11 @@ app.post('/api/tailor-resume', async (req, res) => {
       return res.status(400).json({ error: 'Resume text is required' });
     }
 
-    const model = genAI.getGenerativeModel({ model: 'gemini-pro' });
+    // ✅ FIX: Use the correct model name - 'gemini-1.5-pro' or 'gemini-1.5-flash'
+    // For the latest model, use 'gemini-1.5-pro' or 'gemini-1.5-flash'
+    const model = genAI.getGenerativeModel({ 
+      model: 'gemini-1.5-pro' // Changed from 'gemini-pro' to 'gemini-1.5-pro'
+    });
 
     const prompt = `
       You are an expert ATS (Applicant Tracking System) resume optimizer with 10+ years of experience in HR tech.
@@ -113,7 +116,10 @@ app.post('/api/generate-cv', async (req, res) => {
       return res.status(400).json({ error: 'Job title and keywords are required' });
     }
 
-    const model = genAI.getGenerativeModel({ model: 'gemini-pro' });
+    // ✅ FIX: Use the correct model name
+    const model = genAI.getGenerativeModel({ 
+      model: 'Gemini 3.5 Flash' // Changed from 'gemini-pro' to 'gemini-1.5-pro'
+    });
 
     const prompt = `
       You are a professional CV writer specializing in creating ATS-optimized resumes.
@@ -187,4 +193,4 @@ app.listen(PORT, '0.0.0.0', () => {
   console.log(`🚀 Server running on http://localhost:${PORT}`);
   console.log(`✅ Gemini API is ${API_KEY ? 'configured' : 'MISSING API KEY!'}`);
   console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
-}); 
+});
