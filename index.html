@@ -376,8 +376,115 @@
       flex-wrap: wrap;
     }
 
+    .main-section {
+      width: 100%;
+    }
+
+    .section-hidden {
+      display: none;
+    }
+
+    .home-hero {
+      background: linear-gradient(135deg, #f8fbff 0%, #eef5ff 100%);
+      border: 1px solid #d9e7f7;
+      border-radius: 24px;
+      padding: 2rem;
+      margin-bottom: 1.2rem;
+      box-shadow: 0 10px 24px rgba(0, 20, 40, 0.06);
+    }
+
+    .home-hero h2 {
+      font-size: 1.8rem;
+      color: #0f2944;
+      margin-bottom: 0.6rem;
+    }
+
+    .home-hero p {
+      color: #3a5a7a;
+      line-height: 1.6;
+      max-width: 760px;
+    }
+
+    .option-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .option-card {
+      width: 100%;
+      text-align: left;
+      cursor: pointer;
+      background: #ffffff;
+      border: 1px solid #dbe8f6;
+      border-radius: 18px;
+      padding: 1.2rem;
+      transition: 0.2s ease;
+      color: #163553;
+    }
+
+    .option-card:hover,
+    .option-card:focus-visible {
+      transform: translateY(-2px);
+      border-color: #2a7de1;
+      box-shadow: 0 8px 20px rgba(42, 125, 225, 0.16);
+      outline: none;
+    }
+
+    .option-card h3 {
+      font-size: 1.1rem;
+      margin-bottom: 0.45rem;
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+    }
+
+    .option-card p {
+      font-size: 0.95rem;
+      color: #496787;
+      line-height: 1.5;
+    }
+
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      margin-bottom: 1rem;
+    }
+
+    .section-head h2 {
+      color: #0f2944;
+      font-size: 1.55rem;
+    }
+
+    .text-input {
+      width: 100%;
+      min-height: 110px;
+      padding: 0.8rem 0.9rem;
+      border-radius: 14px;
+      border: 1px solid #c8d9ec;
+      background: #fdfefe;
+      font-size: 0.95rem;
+      color: #1b3955;
+      margin-top: 1rem;
+      resize: vertical;
+    }
+
+    .text-input:focus {
+      outline: none;
+      border-color: #2a7de1;
+      box-shadow: 0 0 0 3px rgba(42, 125, 225, 0.15);
+    }
+
     @media (max-width: 800px) {
       .grid-2col {
+        grid-template-columns: 1fr;
+      }
+
+      .option-grid {
         grid-template-columns: 1fr;
       }
     }
@@ -389,44 +496,98 @@
     <div>
       <h1><i class="fas fa-file-pen" style="color:#2a7de1;"></i> Resume AI · ATS</h1>
       <div class="subhead">
-        <i class="fas fa-robot" style="margin-right: 0.4rem;"></i> Upload your resume · Get ATS-tailored version + match chances for each job
+        <i class="fas fa-robot" style="margin-right: 0.4rem;"></i> Select a workflow and continue in one interactive page
       </div>
     </div>
     <span class="status-message" id="apiStatus"><i class="fas fa-circle" style="color:#2e9e4b; font-size: 0.6rem;"></i> Gemini API ready</span>
   </div>
 
-  <div class="grid-2col">
-    <div class="card">
-      <div class="card-title"><i class="fas fa-upload"></i> 1. Upload & Tailor</div>
+  <section id="homeSection" class="main-section">
+    <div class="home-hero">
+      <h2>Choose your workflow</h2>
+      <p>Tailor your resume for a specific job posting, or use the existing CV-to-jobs + resume quality flow.</p>
+      <div class="option-grid">
+        <button type="button" id="openTailorSection" class="option-card" aria-label="Open AI-Tailored Resume per Job workflow">
+          <h3><i class="fas fa-wand-magic-sparkles" style="color:#2a7de1;"></i> AI-Tailored Resume per Job</h3>
+          <p>Upload your resume, enter job description text, and generate role-specific output.</p>
+        </button>
+        <button type="button" id="openJobsSection" class="option-card" aria-label="Open Jobs Available Based on CV and Resume Quality workflow">
+          <h3><i class="fas fa-briefcase" style="color:#2a7de1;"></i> Jobs Available Based on CV + Resume Quality</h3>
+          <p>Use the current workflow to get fit chances and additional role-focused CV help.</p>
+        </button>
+      </div>
+    </div>
+  </section>
 
-      <div class="upload-zone" id="uploadZone">
+  <section id="tailorSection" class="main-section section-hidden" aria-hidden="true">
+    <div class="section-head">
+      <h2>AI-Tailored Resume per Job</h2>
+      <button class="btn-outline" id="homeFromTailor" type="button" aria-label="Return to home"><i class="fas fa-house"></i> Home</button>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><i class="fas fa-file-lines"></i> Tailor resume for a job description</div>
+
+      <div class="upload-zone" id="tailorUploadZone">
         <i class="fas fa-cloud-upload-alt"></i>
         <p><strong>Drop your resume</strong> or click to browse</p>
         <small>Supports .txt, .pdf, .docx (text extraction simulated)</small>
-        <input type="file" id="fileInput" accept=".txt,.pdf,.docx">
+        <input type="file" id="tailorFileInput" accept=".txt,.pdf,.docx">
       </div>
 
-      <div id="fileStatus" class="file-name"><i class="fas fa-file"></i> No file selected</div>
+      <div id="tailorFileStatus" class="file-name"><i class="fas fa-file"></i> No file selected</div>
 
-      <button class="btn-primary" id="tailorBtn"><i class="fas fa-wand-magic-sparkles"></i> Tailor for ATS (Gemini)</button>
-      <button class="btn-outline" id="clearBtn"><i class="fas fa-undo-alt"></i> Clear</button>
+      <label for="jobDescriptionInput" style="display:block; margin-top: 1rem; color:#1d3f60; font-weight:600;">Job Description</label>
+      <textarea id="jobDescriptionInput" class="text-input" placeholder="Paste the target job description here..." aria-label="Job description input"></textarea>
 
-      <div class="tailor-output" id="tailorOutput">
-        <span class="tailor-output-placeholder"><i class="fas fa-pen-fancy"></i> Your ATS-tailored resume will appear here</span>
-      </div>
-    </div>
+      <button class="btn-primary" id="tailorPerJobBtn" type="button"><i class="fas fa-wand-magic-sparkles"></i> Tailor Resume for this Job</button>
+      <button class="btn-outline" id="tailorPerJobClearBtn" type="button"><i class="fas fa-undo-alt"></i> Clear</button>
 
-    <div class="card">
-      <div class="card-title"><i class="fas fa-list-check"></i> 2. Job Listings & Chances</div>
-
-      <div id="jobListContainer"></div>
-
-      <div style="margin-top: 1.2rem; display: flex; gap: 0.8rem; flex-wrap: wrap;">
-        <button class="btn-primary" id="refreshJobsBtn" style="background: #264d7a;"><i class="fas fa-arrows-rotate"></i> Refresh chances</button>
-        <span style="font-size: 0.9rem; color:#385d82; align-self:center;"><i class="fas fa-chart-simple"></i> based on tailored resume</span>
+      <div class="tailor-output" id="tailorPerJobOutput">
+        <span class="tailor-output-placeholder"><i class="fas fa-pen-fancy"></i> Your tailored resume for this job will appear here</span>
       </div>
     </div>
-  </div>
+  </section>
+
+  <section id="jobsSection" class="main-section section-hidden" aria-hidden="true">
+    <div class="section-head">
+      <h2>Jobs Available Based on CV + Resume Quality</h2>
+      <button class="btn-outline" id="homeFromJobs" type="button" aria-label="Return to home"><i class="fas fa-house"></i> Home</button>
+    </div>
+
+    <div class="grid-2col">
+      <div class="card">
+        <div class="card-title"><i class="fas fa-upload"></i> 1. Upload & Tailor</div>
+
+        <div class="upload-zone" id="uploadZone">
+          <i class="fas fa-cloud-upload-alt"></i>
+          <p><strong>Drop your resume</strong> or click to browse</p>
+          <small>Supports .txt, .pdf, .docx (text extraction simulated)</small>
+          <input type="file" id="fileInput" accept=".txt,.pdf,.docx">
+        </div>
+
+        <div id="fileStatus" class="file-name"><i class="fas fa-file"></i> No file selected</div>
+
+        <button class="btn-primary" id="tailorBtn"><i class="fas fa-wand-magic-sparkles"></i> Tailor for ATS (Gemini)</button>
+        <button class="btn-outline" id="clearBtn"><i class="fas fa-undo-alt"></i> Clear</button>
+
+        <div class="tailor-output" id="tailorOutput">
+          <span class="tailor-output-placeholder"><i class="fas fa-pen-fancy"></i> Your ATS-tailored resume will appear here</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><i class="fas fa-list-check"></i> 2. Job Listings & Chances</div>
+
+        <div id="jobListContainer"></div>
+
+        <div style="margin-top: 1.2rem; display: flex; gap: 0.8rem; flex-wrap: wrap;">
+          <button class="btn-primary" id="refreshJobsBtn" style="background: #264d7a;"><i class="fas fa-arrows-rotate"></i> Refresh chances</button>
+          <span style="font-size: 0.9rem; color:#385d82; align-self:center;"><i class="fas fa-chart-simple"></i> based on tailored resume</span>
+        </div>
+      </div>
+    </div>
+  </section>
 
   <div class="footer-note">
     <i class="fas fa-asterisk" style="color:#3a7bd5;"></i> Using Gemini API for ATS optimization
@@ -455,6 +616,41 @@
     const jobListContainer = document.getElementById('jobListContainer');
     const refreshJobsBtn = document.getElementById('refreshJobsBtn');
     const apiStatus = document.getElementById('apiStatus');
+
+    const homeSection = document.getElementById('homeSection');
+    const tailorSection = document.getElementById('tailorSection');
+    const jobsSection = document.getElementById('jobsSection');
+    const openTailorSection = document.getElementById('openTailorSection');
+    const openJobsSection = document.getElementById('openJobsSection');
+    const homeFromTailor = document.getElementById('homeFromTailor');
+    const homeFromJobs = document.getElementById('homeFromJobs');
+
+    const tailorFileInput = document.getElementById('tailorFileInput');
+    const tailorUploadZone = document.getElementById('tailorUploadZone');
+    const tailorFileStatus = document.getElementById('tailorFileStatus');
+    const jobDescriptionInput = document.getElementById('jobDescriptionInput');
+    const tailorPerJobBtn = document.getElementById('tailorPerJobBtn');
+    const tailorPerJobClearBtn = document.getElementById('tailorPerJobClearBtn');
+    const tailorPerJobOutput = document.getElementById('tailorPerJobOutput');
+
+    function setActiveSection(activeSection) {
+      const sections = {
+        home: homeSection,
+        tailor: tailorSection,
+        jobs: jobsSection
+      };
+
+      Object.entries(sections).forEach(([name, section]) => {
+        const isActive = name === activeSection;
+        section.classList.toggle('section-hidden', !isActive);
+        section.setAttribute('aria-hidden', isActive ? 'false' : 'true');
+      });
+    }
+
+    openTailorSection.addEventListener('click', () => setActiveSection('tailor'));
+    openJobsSection.addEventListener('click', () => setActiveSection('jobs'));
+    homeFromTailor.addEventListener('click', () => setActiveSection('home'));
+    homeFromJobs.addEventListener('click', () => setActiveSection('home'));
 
     async function callGeminiAPI(resumeText, jobDescriptions = '') {
       try {
@@ -535,8 +731,24 @@
       }
     });
 
+    tailorUploadZone.addEventListener('click', () => tailorFileInput.click());
+    tailorUploadZone.addEventListener('dragover', (e) => { e.preventDefault(); tailorUploadZone.style.borderColor = '#2a7de1'; });
+    tailorUploadZone.addEventListener('dragleave', () => { tailorUploadZone.style.borderColor = '#cbdae9'; });
+    tailorUploadZone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      tailorUploadZone.style.borderColor = '#cbdae9';
+      if (e.dataTransfer.files.length) {
+        tailorFileInput.files = e.dataTransfer.files;
+        handleTailorFile(tailorFileInput.files[0]);
+      }
+    });
+
     fileInput.addEventListener('change', (e) => {
       if (fileInput.files.length) handleFile(fileInput.files[0]);
+    });
+
+    tailorFileInput.addEventListener('change', () => {
+      if (tailorFileInput.files.length) handleTailorFile(tailorFileInput.files[0]);
     });
 
     function handleFile(file) {
@@ -576,6 +788,41 @@
       }
     }
 
+    function handleTailorFile(file) {
+      const name = file.name;
+      tailorFileStatus.innerHTML = `<i class="fas fa-file-pdf"></i> ${name} (${(file.size/1024).toFixed(1)} KB)`;
+
+      const reader = new FileReader();
+      reader.onload = function(ev) {
+        let content = ev.target.result;
+        const ext = name.split('.').pop().toLowerCase();
+
+        if (ext === 'pdf' || ext === 'docx') {
+          content = `[Simulated text from ${name}] I am a software engineer with 5 years of experience in React, Node, and cloud. Skilled in Python, SQL, and agile methodologies. Looking for senior roles.`;
+          tailorFileStatus.innerHTML = `<i class="fas fa-file-pdf"></i> ${name} (simulated text)`;
+        } else if (ext !== 'txt') {
+          content = `[Unsupported format, using sample] Experienced developer with focus on full-stack, AWS, and team leadership.`;
+        }
+
+        window.__tailorRawText = content;
+        tailorPerJobOutput.innerHTML = `<span style="color:#1f4870;"><i class="fas fa-check-circle" style="color:#2a7de1;"></i> File loaded. Add job description and click "Tailor Resume for this Job".</span>`;
+      };
+
+      reader.onerror = () => {
+        tailorFileStatus.innerHTML = `<i class="fas fa-exclamation-triangle" style="color:#b33;"></i> Error reading file`;
+      };
+
+      const ext = name.split('.').pop().toLowerCase();
+      if (ext === 'txt') {
+        reader.readAsText(file);
+      } else {
+        reader.onload({ target: { result: `[Simulated content from ${name}] I am a product-minded engineer with 6 years in full-stack development, Java, Spring, and React. Strong in system design and mentoring.` } });
+        window.__tailorRawText = `[Simulated content from ${name}] I am a product-minded engineer with 6 years in full-stack development, Java, Spring, and React. Strong in system design and mentoring.`;
+        tailorPerJobOutput.innerHTML = `<span style="color:#1f4870;"><i class="fas fa-check-circle" style="color:#2a7de1;"></i> File loaded (simulated). Add job description and click "Tailor Resume for this Job".</span>`;
+        tailorFileStatus.innerHTML = `<i class="fas fa-file-pdf"></i> ${name} (simulated)`;
+      }
+    }
+
     tailorBtn.addEventListener('click', async function() {
       const raw = window.__resumeRawText;
       if (!raw || raw.trim() === '') {
@@ -593,6 +840,37 @@
       } catch (e) {
         tailorOutput.innerHTML = `<span style="color:#b33;">Error: ${e.message || 'API error'}</span>`;
       }
+    });
+
+    tailorPerJobBtn.addEventListener('click', async function() {
+      const raw = window.__tailorRawText;
+      const jobDescription = jobDescriptionInput.value.trim();
+
+      if (!raw || raw.trim() === '') {
+        tailorPerJobOutput.innerHTML = `<span style="color:#b33;"><i class="fas fa-exclamation-circle"></i> Please upload a resume file first.</span>`;
+        return;
+      }
+
+      if (!jobDescription) {
+        tailorPerJobOutput.innerHTML = `<span style="color:#b33;"><i class="fas fa-exclamation-circle"></i> Please enter a job description.</span>`;
+        return;
+      }
+
+      tailorPerJobOutput.innerHTML = `<span><span class="loader"></span> Contacting Gemini API ...</span>`;
+      try {
+        const tailoredForJob = await callGeminiAPI(raw, jobDescription);
+        tailorPerJobOutput.innerHTML = `<i class="fas fa-check-circle" style="color:#1f8b4c;"></i> ${tailoredForJob}`;
+      } catch (error) {
+        tailorPerJobOutput.innerHTML = `<span style="color:#b33;">Error: ${error.message || 'API error'}</span>`;
+      }
+    });
+
+    tailorPerJobClearBtn.addEventListener('click', function() {
+      window.__tailorRawText = '';
+      tailorFileStatus.innerHTML = `<i class="fas fa-file"></i> No file selected`;
+      jobDescriptionInput.value = '';
+      tailorPerJobOutput.innerHTML = `<span class="tailor-output-placeholder"><i class="fas fa-pen-fancy"></i> Your tailored resume for this job will appear here</span>`;
+      tailorFileInput.value = '';
     });
 
     clearBtn.addEventListener('click', function() {
@@ -751,6 +1029,9 @@
       renderJobsWithChances(useText);
     });
 
+    window.__resumeRawText = '';
+    window.__tailorRawText = '';
+    setActiveSection('home');
     renderJobsWithChances('');
     console.log('Resume Tailor with Gemini ready!');
   })();
