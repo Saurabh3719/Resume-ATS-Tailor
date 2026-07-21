@@ -1,7 +1,9 @@
-node_modules/
+# Python cache
+__pycache__/
+*.pyc
+
+# Environment variables
 .env
-.DS_Store
-*.log
-*.zip
-dist/
-build/
+
+# Node leftovers
+node_modules/
